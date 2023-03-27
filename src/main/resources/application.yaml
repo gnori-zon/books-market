@@ -1,0 +1,12 @@
+server:
+  port: 8080
+#  DB
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/books_market_db
+    username:
+    password:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate.ddl-auto: create-drop
