@@ -11,4 +11,6 @@ public interface AuthorDao extends JpaRepository<AuthorEntity, Long> {
   List<AuthorEntity> findByFirstNameInAndLastNameIn(List<String> firstName,
       List<String> lastName);
 
+  boolean existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName, String lastName);
+
 }

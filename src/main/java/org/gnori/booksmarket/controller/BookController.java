@@ -46,6 +46,17 @@ public class BookController {
   private final AuthorDao authorDao;
   private final PublisherDao publisherDao;
 
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  Page<BookDto> fetchBooks(
+      @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
+      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size){
+
+    var pageOfEntities = bookDao.findAll(PageRequest.of(page,size));
+
+    return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
+  }
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(value = HttpStatus.CREATED)
   void createBook(
@@ -90,17 +101,6 @@ public class BookController {
         .build();
 
     bookDao.save(newBook);
-  }
-
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  Page<BookDto> fetchBooks(
-      @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size){
-
-    var pageOfEntities = bookDao.findAll(PageRequest.of(page,size));
-
-    return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
   }
 
   @DeleteMapping("/{id}")
