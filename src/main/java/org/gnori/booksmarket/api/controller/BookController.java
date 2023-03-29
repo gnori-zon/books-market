@@ -2,10 +2,12 @@ package org.gnori.booksmarket.api.controller;
 
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
+import jakarta.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,12 +27,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Transactional
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -58,56 +61,103 @@ public class BookController {
 
     return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
   }
-  @PostMapping
-  @ResponseStatus(value = HttpStatus.CREATED)
-  void createBook(
-      @RequestParam String name,
-      @RequestParam String description,
-      @RequestParam(name = "author_ids") List<Long> authorIds,
-      @RequestParam(name = "genre_ids") List<Long> genreIds,
-      @RequestParam(name = "release_date") String releaseDate,
-      @RequestParam String language,
-      @RequestParam(name = "publisher_id") Long publisherId) throws ParseException {
+
+  @PutMapping()
+  @ResponseStatus(HttpStatus.OK)
+  public BookDto updateBook(
+      @RequestParam(required = false) Optional<Long> id,
+      @RequestParam(required = false) Optional<String> name,
+      @RequestParam(required = false) Optional<String> description,
+      @RequestParam(required = false, name = "author_ids") Optional<List<Long>> authorIds,
+      @RequestParam(required = false, name = "genre_ids") Optional<List<Long>> genreIds,
+      @RequestParam(required = false, name = "release_date") Optional<String> releaseDate,
+      @RequestParam(required = false) Optional<String> language,
+      @RequestParam(required = false, name = "publisher_id") Optional<Long> publisherId)
+      throws ParseException {
+
+    if (id.isEmpty() && (name.isEmpty() || description.isEmpty() || authorIds.isEmpty() ||
+        genreIds.isEmpty() || releaseDate.isEmpty() ||
+        language.isEmpty() || publisherId.isEmpty())) {
+      throw new BadRequestException("One parameter is empty");
+    }
 
     var sdf = new SimpleDateFormat(DATE_PATTERN);
 
-    if (name.trim().isEmpty()) {
-      throw new BadRequestException("The \"name\" parameter is empty.");
+    var bookEntity = new BookEntity();
+    if(id.isPresent()) {
+      var optionalBook = bookDao.findById(id.get());
+      if(optionalBook.isEmpty()) {
+        throw new NotFoundException(String.format("Book with id:%d not founded", id.get()));
+      }
+
+      bookEntity = optionalBook.get();
     }
 
-    var newGenres = genreDao.findAllById(genreIds);
-    if (newGenres.isEmpty()) {
-      throw new NotFoundException(String.format("Genres with id: %s not founded", genreIds));
+    if (name.isPresent()) {
+      if (name.get().trim().isEmpty()) {
+        throw new BadRequestException("The \"name\" parameter is empty.");
+      }
+
+      bookEntity.setName(processName(name.get()));
     }
 
-    var newAuthors = authorDao.findAllById(authorIds);
-    if (newAuthors.isEmpty()) {
-      throw new NotFoundException(String.format("Authors with id: %s not founded", authorIds));
+    if (description.isPresent()) {
+      bookEntity.setDescription(description.get());
     }
 
-    var newPublisher = publisherDao.findById(publisherId);
-    if (newPublisher.isEmpty()) {
-      throw new NotFoundException(String.format("Publisher with id: %d not founded", publisherId));
+    if (genreIds.isPresent()) {
+      var newGenres = genreDao.findAllById(genreIds.get());
+
+      if (newGenres.isEmpty()) {
+        throw new NotFoundException(String.format("Genres with id: %s not founded", genreIds));
+      }
+
+      bookEntity.setGenres(newGenres);
     }
 
-    var newLanguage = Arrays.stream(Language.values()).filter(
-            lang -> language.equalsIgnoreCase(lang.getLanguage()))
-        .findFirst().orElse(null);
-    if (newLanguage == null) {
-      throw new NotFoundException(String.format("Language: %s not founded", language));
+    if (authorIds.isPresent()) {
+      var newAuthors = authorDao.findAllById(authorIds.get());
+
+      if (newAuthors.isEmpty()) {
+        throw new NotFoundException(
+            String.format("Authors with id: %s not founded", authorIds.get()));
+      }
+
+      bookEntity.setAuthors(newAuthors);
     }
 
-    name = processName(name);
+    if (publisherId.isPresent()) {
+      var newPublisher = publisherDao.findById(publisherId.get());
+      if (newPublisher.isEmpty()) {
+        throw new NotFoundException(
+            String.format("Publisher with id: %d not founded", publisherId.get()));
+      }
+      bookEntity.setPublisher(newPublisher.get());
 
-    bookDao.saveAndFlush(BookEntity.builder()
-        .name(name)
-        .description(description)
-        .language(newLanguage)
-        .releaseDate(sdf.parse(releaseDate))
-        .genres(newGenres)
-        .authors(newAuthors)
-        .publisher(newPublisher.get())
-        .build());
+      var authors = bookEntity.getAuthors();
+      var publisherAuthor = bookEntity.getPublisher().getAuthors();
+      authors.forEach(author -> {
+        if(!publisherAuthor.contains(author)) publisherAuthor.add(author);
+      });
+      bookEntity.getPublisher().setAuthors(publisherAuthor);
+    }
+
+    if (language.isPresent()) {
+      var newLanguage = Arrays.stream(Language.values()).filter(
+              lang -> language.get().equalsIgnoreCase(lang.getLanguage()))
+          .findFirst().orElse(null);
+      if (newLanguage == null) {
+        throw new NotFoundException(String.format("Language: %s not founded", language));
+      }
+
+      bookEntity.setLanguage(newLanguage);
+    }
+
+    if (releaseDate.isPresent()) {
+      bookEntity.setReleaseDate(sdf.parse(releaseDate.get()));
+    }
+
+    return bookDtoFactory.createBookDtoFrom(bookDao.saveAndFlush(bookEntity));
   }
 
   @DeleteMapping("/{id}")

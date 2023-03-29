@@ -38,9 +38,6 @@ public class BookDto {
 
   String language;
 
-  Long volume;
-
-  Double size;
   @JsonUnwrapped
   List<ReviewDto> reviews;
 

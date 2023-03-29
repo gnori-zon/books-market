@@ -16,7 +16,12 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PublisherDtoFactory {
   public Page<PublisherDto> createPageOfPublisherDtoFrom(Page<PublisherEntity> pageOfEntities) {
-    return new PageImpl<PublisherDto>(pageOfEntities.stream().map(publisher -> PublisherDto.builder()
+    return new PageImpl<PublisherDto>(pageOfEntities.stream().map(this::createPublisherDtoFrom)
+        .collect(Collectors.toList()));
+  }
+
+  public PublisherDto createPublisherDtoFrom(PublisherEntity publisher) {
+    return PublisherDto.builder()
         .id(publisher.getId())
         .name(publisher.getName())
         .authors(publisher.getAuthors().stream().map(
@@ -25,7 +30,8 @@ public class PublisherDtoFactory {
                 .firstName(author.getFirstName())
                 .lastName(author.getLastName())
                 .build()
-            ).collect(Collectors.toList()))
-        .build()).collect(Collectors.toList()));
+        ).collect(Collectors.toList()))
+        .build();
   }
+
 }

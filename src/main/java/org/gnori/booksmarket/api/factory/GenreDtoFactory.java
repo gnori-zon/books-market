@@ -17,16 +17,21 @@ import org.springframework.stereotype.Component;
 public class GenreDtoFactory {
 
   public Page<GenreDto> createPageOfGenreDtoFrom(Page<GenreEntity> pageOfEntities) {
-    return new PageImpl<GenreDto>( pageOfEntities.stream().map(genreEntity -> GenreDto.builder()
-            .id(genreEntity.getId())
-            .name(genreEntity.getName())
-            .books(genreEntity.getBooks().stream().map(
-                book -> BookDto.builder()
-                    .id(book.getId())
-                    .name(book.getName())
-                    .build()
-            ).collect(Collectors.toList()))
-            .build()
-        ).collect(Collectors.toList()));
+
+    return new PageImpl<GenreDto>( pageOfEntities.stream().map(this::createGenreDtoFrom).toList());
+  }
+
+  public GenreDto createGenreDtoFrom(GenreEntity genre) {
+
+    return GenreDto.builder()
+        .id(genre.getId())
+        .name(genre.getName())
+        .books(genre.getBooks().stream().map(
+            book -> BookDto.builder()
+                .id(book.getId())
+                .name(book.getName())
+                .build()
+        ).collect(Collectors.toList()))
+        .build();
   }
 }

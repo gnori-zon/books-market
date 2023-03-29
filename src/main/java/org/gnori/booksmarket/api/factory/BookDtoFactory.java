@@ -20,7 +20,12 @@ public class BookDtoFactory {
 
   public Page<BookDto> createPageOfBookDtoFrom(Page<BookEntity> pageOfEntities) {
 
-    return new PageImpl<BookDto>(pageOfEntities.stream().map(entity -> BookDto.builder()
+    return new PageImpl<BookDto>(pageOfEntities.stream().map(this::createBookDtoFrom)
+        .collect(Collectors.toList()));
+  }
+
+  public BookDto createBookDtoFrom(BookEntity entity) {
+    return BookDto.builder()
         .id(entity.getId())
         .name(entity.getName())
         .description(entity.getDescription())
@@ -33,21 +38,20 @@ public class BookDtoFactory {
                 .title(review.getTitle())
                 .content(review.getContent())
                 .build()
-          ).collect(Collectors.toList()))
+        ).collect(Collectors.toList()))
         .authors(entity.getAuthors().stream().map(
             author -> AuthorDto.builder()
                 .id(author.getId())
                 .firstName(author.getFirstName())
                 .lastName(author.getLastName())
                 .build()
-          ).collect(Collectors.toList()))
+        ).collect(Collectors.toList()))
         .genres(entity.getGenres().stream().map(
             genre -> GenreDto.builder()
                 .id(genre.getId())
                 .name(genre.getName())
                 .build()
-          ).collect(Collectors.toList()))
-        .build()).collect(Collectors.toList()));
+        ).collect(Collectors.toList()))
+        .build();
   }
-
 }

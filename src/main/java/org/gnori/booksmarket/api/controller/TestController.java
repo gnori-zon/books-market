@@ -1,5 +1,6 @@
 package org.gnori.booksmarket.api.controller;
 
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Transactional
 @RestController
 @RequestMapping("/api/test")
 @AllArgsConstructor

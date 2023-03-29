@@ -18,16 +18,21 @@ public class AuthorDtoFactory {
 
   public Page<AuthorDto> createPageOfAuthorDtoFrom(Page<AuthorEntity> pageOfEntities) {
 
-    return new PageImpl<AuthorDto>(pageOfEntities.map(entity -> AuthorDto.builder()
-        .id(entity.getId())
-        .firstName(entity.getFirstName())
-        .lastName(entity.getLastName())
-        .books(entity.getBooks().stream().map(
-            book -> BookDto.builder()
-                .id(book.getId())
-                .name(book.getName())
+    return new PageImpl<AuthorDto>(pageOfEntities.map(this::createAuthorDtoFrom).toList());
+  }
+
+  public AuthorDto createAuthorDtoFrom(AuthorEntity author) {
+
+    return AuthorDto.builder()
+        .id(author.getId())
+        .firstName(author.getFirstName())
+        .lastName(author.getLastName())
+        .books(author.getBooks().stream().map(
+            books -> BookDto.builder()
+                .id(books.getId())
+                .name(books.getName())
                 .build()
-            ).collect(Collectors.toList()))
-        .build()).toList());
+        ).collect(Collectors.toList()))
+        .build();
   }
 }

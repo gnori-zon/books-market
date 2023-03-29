@@ -2,6 +2,9 @@ package org.gnori.booksmarket.api.controller;
 
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
+import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Transactional
 @RestController
 @RequestMapping("/api/authors")
 @RequiredArgsConstructor
@@ -49,14 +54,14 @@ public class AuthorController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public void createAuthor(
+  public AuthorDto createAuthor(
       @RequestParam(name = "first_name") String firstName,
       @RequestParam(name = "last_name") String lastName) {
 
     if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
       throw new BadRequestException("The \"first_name\" or \"last_name\" parameter is empty.");
     }
-    
+
     if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName)) {
       throw new BadRequestException(
           String.format("Author \"%s %s\" already exists.", firstName, lastName)
@@ -64,13 +69,56 @@ public class AuthorController {
     }
 
     firstName = processName(firstName);
-    
+
     lastName = processName(lastName);
 
-    authorDao.saveAndFlush(AuthorEntity.builder()
+    return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(AuthorEntity.builder()
         .firstName(firstName)
         .lastName(lastName)
-        .build());
+        .books(new ArrayList<>())
+        .build()));
+
+  }
+
+  @PatchMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public AuthorDto updateAuthor(
+      @PathVariable Long id,
+      @RequestParam(required = false, name = "first_name") Optional<String> firstName,
+      @RequestParam(required = false, name = "last_name") Optional<String> lastName) {
+
+    if (firstName.isEmpty() && lastName.isEmpty()) {
+      throw new BadRequestException("The \"first_name\" and \"last_name\" parameter is empty.");
+    }
+
+    var optionalAuthor = authorDao.findById(id);
+
+    if (optionalAuthor.isEmpty()) {
+      throw new BadRequestException(
+          String.format("Author with id:%d does not exists.", id)
+      );
+    }
+
+    var author = optionalAuthor.get();
+
+    if (firstName.isPresent() && !firstName.get().trim().isEmpty()) {
+      var newFirstName = processName(firstName.get());
+      author.setFirstName(newFirstName);
+    }
+
+    if (lastName.isPresent() && !lastName.get().trim().isEmpty()) {
+      var newLastName = processName(lastName.get());
+      author.setLastName(newLastName);
+    }
+
+    if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
+        author.getFirstName(), author.getLastName())) {
+      throw new BadRequestException(
+          String.format("Author \"%s %s\" already exists.", firstName, lastName)
+      );
+    }
+
+    return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(author));
 
   }
 
@@ -85,7 +133,7 @@ public class AuthorController {
     }
     if (!optionalAuthor.get().getBooks().isEmpty()) {
       throw new BadRequestException(String.format(
-          "Author with id:%d cannot be deleted. There are books by this author", id));
+          "Author with id:%d cannot be deleted. There are books by this author.", id));
     }
 
     authorDao.deleteById(id);

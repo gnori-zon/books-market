@@ -2,6 +2,9 @@ package org.gnori.booksmarket.api.controller;
 
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
+import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,12 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Transactional
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/publishers")
@@ -47,9 +51,10 @@ public class PublisherController {
     return publisherDtoFactory.createPageOfPublisherDtoFrom(pageOfEntities);
   }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public void createPublisher(
+  @PutMapping
+  @ResponseStatus(HttpStatus.OK)
+  public PublisherDto updateOrCreatePublisher(
+      @RequestParam(required = false) Optional<Long> id,
       @RequestParam String name) {
 
     if (name.isEmpty()) {
@@ -62,9 +67,24 @@ public class PublisherController {
 
     name = processName(name);
 
-    publisherDao.saveAndFlush(PublisherEntity.builder()
+    var publisherEntity = PublisherEntity.builder()
         .name(name)
-        .build());
+        .authors(new ArrayList<>())
+        .build();
+
+    if(id.isPresent()) {
+      var optionalPublisher = publisherDao.findById(id.get());
+
+      if(optionalPublisher.isEmpty()) {
+        throw new NotFoundException(String.format("Publisher with id:%d doesn't exist", id.get()));
+      } else {
+        publisherEntity = optionalPublisher.get();
+
+        publisherEntity.setName(name);
+      }
+    }
+
+    return publisherDtoFactory.createPublisherDtoFrom(publisherDao.saveAndFlush(publisherEntity));
   }
 
   @DeleteMapping("/{id}")
