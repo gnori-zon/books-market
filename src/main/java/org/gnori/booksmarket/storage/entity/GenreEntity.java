@@ -35,6 +35,7 @@ public class GenreEntity {
   @Column(unique = true)
   String name;
 
+  @Builder.Default
   @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
   List<BookEntity> books = new ArrayList<>();
 

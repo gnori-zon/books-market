@@ -11,6 +11,7 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.api.controller.utils.PageRequestBuilder;
 import org.gnori.booksmarket.api.dto.BookDto;
 import org.gnori.booksmarket.api.exception.BadRequestException;
 import org.gnori.booksmarket.api.exception.NotFoundException;
@@ -22,7 +23,6 @@ import org.gnori.booksmarket.storage.dao.PublisherDao;
 import org.gnori.booksmarket.storage.entity.BookEntity;
 import org.gnori.booksmarket.storage.entity.enums.Language;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,10 +55,48 @@ public class BookController {
   @ResponseStatus(HttpStatus.OK)
   Page<BookDto> fetchBooks(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size) {
+      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size,
+      @RequestParam(required = false, name="author_ids") Optional<List<Long>> authorsId,
+      @RequestParam(required = false, name="genre_ids") Optional<List<Long>> genresId,
+      @RequestParam(required = false, name="publisher_ids") Optional<List<Long>> publishersId,
+      @RequestParam(required = false, name = "sort_by_name") Optional<String> sortByName,
+      @RequestParam(required = false,
+          name = "sort_by_release_date") Optional<String> sortByReleaseDate) {
 
-    var pageOfEntities = bookDao.findAll(PageRequest.of(page, size));
+    var pageParams = PageRequestBuilder.buildPageRequestForNameAndReleaseDate(page, size,
+        sortByName, sortByReleaseDate);
 
+    Page<BookEntity> pageOfEntities;
+
+    if (authorsId.isPresent() && genresId.isPresent() && publishersId.isPresent()){
+      pageOfEntities = bookDao.findAllByAuthorIdsAndGenreIdsAndPublisherIds(authorsId.get(),
+          genresId.get(), publishersId.get(), pageParams);
+
+    } else if (authorsId.isPresent() && genresId.isPresent()) {
+      pageOfEntities = bookDao.findAllByGenreIdsAndAuthorIds(genresId.get(),
+          authorsId.get(), pageParams);
+
+    } else if (genresId.isPresent() && publishersId.isPresent()) {
+      pageOfEntities = bookDao.findAllByGenreIdsAndPublisherIds(genresId.get(),
+          publishersId.get(), pageParams);
+
+    } else if (authorsId.isPresent() && publishersId.isPresent()) {
+      pageOfEntities = bookDao.findAllByAuthorIdsAndPublisherIds(authorsId.get(),
+          publishersId.get(), pageParams);
+
+    } else if (authorsId.isPresent()) {
+      pageOfEntities = bookDao.findAllByAuthorIds(authorsId.get(), pageParams);
+
+    } else if (genresId.isPresent()) {
+      pageOfEntities = bookDao.findAllByGenreIds(genresId.get(), pageParams);
+
+    } else if (publishersId.isPresent()) {
+      pageOfEntities = bookDao.findAllByPublisherIds(publishersId.get(), pageParams);
+
+    } else {
+      pageOfEntities = bookDao.findAll(pageParams);
+
+    }
     return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
   }
 

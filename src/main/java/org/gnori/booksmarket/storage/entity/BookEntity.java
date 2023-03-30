@@ -45,6 +45,7 @@ public class BookEntity {
 
   String description;
 
+  @Builder.Default
   @ManyToMany (fetch = FetchType.EAGER,
       cascade = {CascadeType.MERGE, CascadeType.DETACH})
   @JoinTable (
@@ -53,6 +54,7 @@ public class BookEntity {
       inverseJoinColumns = {@JoinColumn(name = "author_id")})
   List<AuthorEntity> authors = new ArrayList<>();
 
+  @Builder.Default
   @ManyToMany (fetch = FetchType.EAGER,
       cascade = {CascadeType.MERGE, CascadeType.DETACH})
   @JoinTable (
@@ -67,6 +69,7 @@ public class BookEntity {
   @Enumerated(value = EnumType.ORDINAL)
   Language language;
 
+  @Builder.Default
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "book_id")
   List<ReviewEntity> reviews = new ArrayList<>();

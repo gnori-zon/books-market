@@ -3,11 +3,11 @@ package org.gnori.booksmarket.api.controller;
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.api.controller.utils.PageRequestBuilder;
 import org.gnori.booksmarket.api.dto.GenreDto;
 import org.gnori.booksmarket.api.exception.BadRequestException;
 import org.gnori.booksmarket.api.exception.NotFoundException;
@@ -15,7 +15,6 @@ import org.gnori.booksmarket.api.factory.GenreDtoFactory;
 import org.gnori.booksmarket.storage.dao.GenreDao;
 import org.gnori.booksmarket.storage.entity.GenreEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +43,12 @@ public class GenreController {
   @ResponseStatus(HttpStatus.OK)
   public Page<GenreDto> fetchGenres(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size) {
+      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size,
+      @RequestParam(required = false, name = "sort_by_name") Optional<String> sortByName) {
 
-    var pageOfEntities = genreDao.findAll(PageRequest.of(page, size));
+    var pageParams = PageRequestBuilder.buildPageRequestForName(page, size, sortByName);
+
+    var pageOfEntities = genreDao.findAll(pageParams);
 
     return genreDtoFactory.createPageOfGenreDtoFrom(pageOfEntities);
   }
@@ -69,7 +71,6 @@ public class GenreController {
 
     var genreEntity = GenreEntity.builder()
         .name(name)
-        .books(new ArrayList<>())
         .build();
 
     if (id.isPresent()) {

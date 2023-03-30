@@ -38,6 +38,7 @@ public class AuthorEntity {
   @Column(name = "last_name")
   String lastName;
 
+  @Builder.Default
   @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
   List<BookEntity> books = new ArrayList<>();
 

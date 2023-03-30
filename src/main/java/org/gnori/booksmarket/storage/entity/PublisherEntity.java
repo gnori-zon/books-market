@@ -33,6 +33,8 @@ public class PublisherEntity {
   Long id;
 
   String name;
+
+  @Builder.Default
   @ManyToMany(fetch = FetchType.LAZY,
       cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
   List<AuthorEntity> authors = new ArrayList<>();
