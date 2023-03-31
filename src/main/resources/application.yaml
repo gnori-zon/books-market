@@ -3,10 +3,14 @@ server:
 #  DB
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/books_market_db
+    url:
     username:
     password:
   jpa:
     generate-ddl: true
     show-sql: true
     hibernate.ddl-auto: create-drop
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB

@@ -97,7 +97,7 @@ public class AuthorController {
     var optionalAuthor = authorDao.findById(id);
 
     if (optionalAuthor.isEmpty()) {
-      throw new BadRequestException(
+      throw new NotFoundException(
           String.format("Author with id:%d does not exists.", id)
       );
     }
@@ -132,7 +132,7 @@ public class AuthorController {
 
     var optionalAuthor = authorDao.findById(id);
     if (optionalAuthor.isEmpty()) {
-      throw new NotFoundException(String.format("Author with id:%d doesn't exist.", id));
+      throw new NotFoundException(String.format("Author with id: %d doesn't exist.", id));
     }
     if (!optionalAuthor.get().getBooks().isEmpty()) {
       throw new BadRequestException(String.format(

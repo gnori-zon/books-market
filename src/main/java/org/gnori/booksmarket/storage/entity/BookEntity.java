@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,6 +79,9 @@ public class BookEntity {
       cascade = {CascadeType.MERGE, CascadeType.DETACH})
   @JoinColumn(name = "publisher_id")
   PublisherEntity publisher;
+
+  @OneToOne(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  BinaryContentEntity binaryContent;
 
   @Override
   public boolean equals(Object o) {
