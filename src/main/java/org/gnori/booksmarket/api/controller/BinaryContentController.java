@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.gnori.booksmarket.api.exception.BadRequestException;
 import org.gnori.booksmarket.api.exception.InternalServerError;
 import org.gnori.booksmarket.api.exception.NotFoundException;
-import org.gnori.booksmarket.api.service.FileService;
+import org.gnori.booksmarket.service.FileService;
 import org.gnori.booksmarket.storage.dao.BinaryContentDao;
 import org.gnori.booksmarket.storage.dao.BookDao;
 import org.gnori.booksmarket.storage.entity.BinaryContentEntity;

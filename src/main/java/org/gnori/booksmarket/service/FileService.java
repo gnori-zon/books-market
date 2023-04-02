@@ -1,4 +1,4 @@
-package org.gnori.booksmarket.api.service;
+package org.gnori.booksmarket.service;
 
 import org.springframework.core.io.FileSystemResource;
 

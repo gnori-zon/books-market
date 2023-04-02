@@ -1,4 +1,4 @@
-package org.gnori.booksmarket.api.service;
+package org.gnori.booksmarket.service;
 
 import java.io.File;
 import java.io.IOException;
