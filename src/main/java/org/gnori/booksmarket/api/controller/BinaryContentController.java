@@ -54,7 +54,7 @@ public class BinaryContentController {
     var type = file.getTypeImage();
     var bytes = file.getImage();
 
-    var fileSystemResource = fileService.getFilesystemResource(bytes);
+    var fileSystemResource = fileService.getFilesystemResource(bytes, "image_" + id);
 
     if(fileSystemResource==null) {
       throw new InternalServerError("InternalServerError");
@@ -80,7 +80,7 @@ public class BinaryContentController {
     var type = file.getTypeRaw();
     var bytes = file.getRaw();
 
-    var fileSystemResource = fileService.getFilesystemResource(bytes);
+    var fileSystemResource = fileService.getFilesystemResource(bytes, "raw_" + id);
 
     if(fileSystemResource==null) {
       throw new InternalServerError("InternalServerError");

@@ -63,6 +63,9 @@ public class BookController {
       @RequestParam(required = false,
           name = "sort_by_release_date") Optional<String> sortByReleaseDate) {
 
+    if (page < 0) page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
+    if (size < 0) size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+
     var pageParams = PageRequestBuilder.buildPageRequestForNameAndReleaseDate(page, size,
         sortByName, sortByReleaseDate);
 

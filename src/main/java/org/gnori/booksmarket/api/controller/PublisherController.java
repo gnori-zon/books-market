@@ -46,6 +46,9 @@ public class PublisherController {
       @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size,
       @RequestParam(required = false, name = "sort_by_name") Optional<String> sortByName) {
 
+    if (page < 0) page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
+    if (size < 0) size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+
     var pageParams = PageRequestBuilder.buildPageRequestForName(page, size, sortByName);
 
     var pageOfEntities = publisherDao.findAll(pageParams);

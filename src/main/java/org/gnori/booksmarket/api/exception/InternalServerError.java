@@ -1,8 +1,10 @@
 package org.gnori.booksmarket.api.exception;
 
-public class InternalServerError extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class InternalServerError extends BusinessException {
 
   public InternalServerError(String message) {
-    super(message);
+    super(message, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

@@ -48,6 +48,9 @@ public class AuthorController {
       @RequestParam(required = false, name = "sort_by_first_name") Optional<String> sortByFirstName,
       @RequestParam(required = false, name = "sort_by_last_name") Optional<String> sortByLastName) {
 
+    if (page < 0) page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
+    if (size < 0) size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+
     var pageParams = PageRequestBuilder.buildPageRequestForFirstAndLastName(page, size,
         sortByFirstName, sortByLastName);
 
