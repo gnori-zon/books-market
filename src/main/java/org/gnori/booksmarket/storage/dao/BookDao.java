@@ -55,4 +55,6 @@ public interface BookDao extends JpaRepository<BookEntity,Long> {
       + "where p.id in :p_ids and bg.genre_id in :g_ids and ba.author_id in :a_ids")
   Page<BookEntity> findAllByAuthorIdsAndGenreIdsAndPublisherIds(@Param("a_ids")List<Long> authorIds,
       @Param("g_ids") List<Long> genreIds, @Param("p_ids") List<Long> publisherIds, Pageable pageable);
+
+  Page<BookEntity> findAllByNameStartingWith(String prefix, Pageable pageable);
 }

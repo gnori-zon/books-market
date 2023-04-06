@@ -3,6 +3,7 @@ package org.gnori.booksmarket.security.auth;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.api.exception.UsernameNotFoundException;
 import org.gnori.booksmarket.security.config.JwtService;
 import org.gnori.booksmarket.security.user.Role;
 import org.gnori.booksmarket.security.user.User;
@@ -49,7 +50,7 @@ public class AuthenticationService {
     );
 
     var user = userRepository.findByUsername(request.getUsername())
-        .orElseThrow();
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     var jwt = jwtService.generateToken(user);
 

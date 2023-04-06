@@ -18,6 +18,14 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookDtoFactory {
 
+  public Page<BookDto> createPageOfBookDtoFrom(Page<BookEntity> pageOfEntities, String prefixName) {
+
+    return new PageImpl<BookDto>(pageOfEntities.stream()
+        .filter(book -> book.getName().startsWith(prefixName))
+        .map(this::createBookDtoFrom)
+        .collect(Collectors.toList()));
+  }
+
   public Page<BookDto> createPageOfBookDtoFrom(Page<BookEntity> pageOfEntities) {
 
     return new PageImpl<BookDto>(pageOfEntities.stream().map(this::createBookDtoFrom)

@@ -56,6 +56,7 @@ public class BookController {
   Page<BookDto> fetchBooks(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
       @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size,
+      @RequestParam(required = false, name="prefix_name") Optional<String> prefixName,
       @RequestParam(required = false, name="author_ids") Optional<List<Long>> authorsId,
       @RequestParam(required = false, name="genre_ids") Optional<List<Long>> genresId,
       @RequestParam(required = false, name="publisher_ids") Optional<List<Long>> publishersId,
@@ -70,6 +71,7 @@ public class BookController {
         sortByName, sortByReleaseDate);
 
     Page<BookEntity> pageOfEntities;
+    boolean isOnlyPrefix = false;
 
     if (authorsId.isPresent() && genresId.isPresent() && publishersId.isPresent()){
       pageOfEntities = bookDao.findAllByAuthorIdsAndGenreIdsAndPublisherIds(authorsId.get(),
@@ -96,10 +98,21 @@ public class BookController {
     } else if (publishersId.isPresent()) {
       pageOfEntities = bookDao.findAllByPublisherIds(publishersId.get(), pageParams);
 
+    } else if (prefixName.isPresent()){
+      // when used only prefix
+      isOnlyPrefix = true;
+
+      pageOfEntities = bookDao.findAllByNameStartingWith(processName(prefixName.get()), pageParams);
+
     } else {
       pageOfEntities = bookDao.findAll(pageParams);
-
     }
+
+    if (!isOnlyPrefix && prefixName.isPresent()) {
+      // when used more than just a prefix
+      return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities, processName(prefixName.get()));
+    }
+
     return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
   }
 

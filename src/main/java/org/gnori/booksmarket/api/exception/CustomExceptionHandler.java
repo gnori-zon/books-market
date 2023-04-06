@@ -21,8 +21,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     HttpStatus status;
     if (ex instanceof BusinessException businessException) {
       status = businessException.getStatus();
-    } else {
+
+    } else if (ex instanceof AuthenticationException) {
       status = HttpStatus.FORBIDDEN;
+
+    } else {
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     return ResponseEntity
