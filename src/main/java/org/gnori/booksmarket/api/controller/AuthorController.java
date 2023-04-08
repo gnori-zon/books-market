@@ -18,29 +18,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Transactional
 @RestController
-@RequestMapping("/api/authors")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthorController {
 
-  public static final String DEFAULT_PAGE_NUMBER = "0";
-  public static final String DEFAULT_PAGE_SIZE = "10";
+  static final String DEFAULT_PAGE_NUMBER = "0";
+  static final String DEFAULT_PAGE_SIZE = "10";
+  static final String AUTHOR_URL = "/api/authors";
 
   AuthorDao authorDao;
 
   AuthorDtoFactory authorDtoFactory;
 
-  @GetMapping
+  @GetMapping(AUTHOR_URL)
   @ResponseStatus(HttpStatus.OK)
   public Page<AuthorDto> fetchAuthors(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
@@ -59,76 +57,72 @@ public class AuthorController {
     return authorDtoFactory.createPageOfAuthorDtoFrom(pageOfEntities);
   }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public AuthorDto createAuthor(
-      @RequestParam(name = "first_name") String firstName,
-      @RequestParam(name = "last_name") String lastName) {
-
-    if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
-      throw new BadRequestException("The \"first_name\" or \"last_name\" parameter is empty.");
-    }
-
-    if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName)) {
-      throw new BadRequestException(
-          String.format("Author \"%s %s\" already exists.", firstName, lastName)
-      );
-    }
-
-    firstName = processName(firstName);
-
-    lastName = processName(lastName);
-
-    return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(AuthorEntity.builder()
-        .firstName(firstName)
-        .lastName(lastName)
-        .build()));
-
-  }
-
-  @PatchMapping("/{id}")
+  @PutMapping(AUTHOR_URL)
   @ResponseStatus(HttpStatus.OK)
-  public AuthorDto updateAuthor(
-      @PathVariable Long id,
-      @RequestParam(required = false, name = "first_name") Optional<String> firstName,
-      @RequestParam(required = false, name = "last_name") Optional<String> lastName) {
+  public AuthorDto updateOrCreateAuthor(
+    @RequestParam(required = false) Optional<Long> id,
+    @RequestParam(required = false, name = "first_name") Optional<String> firstName,
+    @RequestParam(required = false, name = "last_name") Optional<String> lastName) {
 
-    if (firstName.isEmpty() && lastName.isEmpty()) {
-      throw new BadRequestException("The \"first_name\" and \"last_name\" parameter is empty.");
-    }
+    if (id.isPresent()) {
 
-    var optionalAuthor = authorDao.findById(id);
+      if (firstName.isEmpty() && lastName.isEmpty()) {
+        throw new BadRequestException("The \"first_name\" and \"last_name\" parameter is empty.");
+      }
 
-    if (optionalAuthor.isEmpty()) {
-      throw new NotFoundException(
-          String.format("Author with id:%d does not exists.", id)
-      );
-    }
+      var optionalAuthor = authorDao.findById(id.get());
 
-    var author = optionalAuthor.get();
+      if (optionalAuthor.isEmpty()) {
+        throw new NotFoundException(
+            String.format("Author with id: %d does not exists.", id.get())
+        );
+      }
 
-    if (firstName.isPresent() && !firstName.get().trim().isEmpty()) {
+      var author = optionalAuthor.get();
+
+      if (firstName.isPresent() && !firstName.get().trim().isEmpty()) {
+        var newFirstName = processName(firstName.get());
+        author.setFirstName(newFirstName);
+      }
+
+      if (lastName.isPresent() && !lastName.get().trim().isEmpty()) {
+        var newLastName = processName(lastName.get());
+        author.setLastName(newLastName);
+      }
+
+      if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
+          author.getFirstName(), author.getLastName())) {
+        throw new BadRequestException(
+            String.format("Author \"%s %s\" already exists.", author.getFirstName(), author.getLastName())
+        );
+      }
+      return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(author));
+
+    } else {
+
+      if(firstName.isEmpty() || lastName.isEmpty() || firstName.get().trim().isEmpty() || lastName.get().trim().isEmpty()) {
+        throw new BadRequestException("The \"first_name\" or \"last_name\" parameter is empty.");
+      }
+
+      if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName.get().trim(),
+          lastName.get().trim())) {
+        throw new BadRequestException(
+            String.format("Author \"%s %s\" already exists.", firstName.get(), lastName.get())
+        );
+      }
+
       var newFirstName = processName(firstName.get());
-      author.setFirstName(newFirstName);
-    }
 
-    if (lastName.isPresent() && !lastName.get().trim().isEmpty()) {
       var newLastName = processName(lastName.get());
-      author.setLastName(newLastName);
+
+      return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(AuthorEntity.builder()
+          .firstName(newFirstName)
+          .lastName(newLastName)
+          .build()));
     }
-
-    if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
-        author.getFirstName(), author.getLastName())) {
-      throw new BadRequestException(
-          String.format("Author \"%s %s\" already exists.", firstName, lastName)
-      );
-    }
-
-    return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(author));
-
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(AUTHOR_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteAuthor(
       @PathVariable Long id) {
@@ -139,7 +133,7 @@ public class AuthorController {
     }
     if (!optionalAuthor.get().getBooks().isEmpty()) {
       throw new BadRequestException(String.format(
-          "Author with id:%d cannot be deleted. There are books by this author.", id));
+          "Author with id: %d cannot be deleted. There are books by this author.", id));
     }
 
     authorDao.deleteById(id);

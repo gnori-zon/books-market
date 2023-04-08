@@ -32,10 +32,11 @@ dependencies {
     compileOnly 'commons-io:commons-io:2.11.0'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

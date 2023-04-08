@@ -18,7 +18,7 @@ public class PageRequestBuilder {
   public static PageRequest buildPageRequestForFirstAndLastName(Integer page, Integer size,
       Optional<String> sortByFirstName, Optional<String> sortByLastName){
 
-    ArrayList<Sort> sortList = getSortList(Map.of(FIELD_FIRST_NAME,
+    ArrayList<Sort> sortList = getSortParamsList(Map.of(FIELD_FIRST_NAME,
         sortByFirstName, FIElD_LAST_NAME, sortByLastName));
 
     if (sortList.size() > 1) {
@@ -35,7 +35,7 @@ public class PageRequestBuilder {
   public static PageRequest buildPageRequestForName(Integer page, Integer size,
       Optional<String> sortByName) {
 
-    var sortList = getSortList(Map.of(FIElD_NAME, sortByName));
+    var sortList = getSortParamsList(Map.of(FIElD_NAME, sortByName));
 
     if (sortList.size() == 1) {
       return PageRequest.of(page, size, sortList.get(0));
@@ -48,7 +48,7 @@ public class PageRequestBuilder {
   public static PageRequest buildPageRequestForNameAndReleaseDate(Integer page, Integer size,
       Optional<String> sortByName, Optional<String> sortByReleaseDate) {
 
-    var sortList = getSortList(Map.of(FIElD_NAME,
+    var sortList = getSortParamsList(Map.of(FIElD_NAME,
         sortByName, FIElD_RELEASE_DATE, sortByReleaseDate));
 
     if (sortList.size() > 1) {
@@ -62,7 +62,7 @@ public class PageRequestBuilder {
     return PageRequest.of(page,size);
   }
 
-  private static ArrayList<Sort> getSortList(Map<String,Optional<String>> sortByParamAndFieldMap) {
+  private static ArrayList<Sort> getSortParamsList(Map<String,Optional<String>> sortByParamAndFieldMap) {
 
     var sortList = new ArrayList<Sort>();
 

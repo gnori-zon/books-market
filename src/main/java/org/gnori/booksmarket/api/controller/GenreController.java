@@ -1,5 +1,7 @@
 package org.gnori.booksmarket.api.controller;
 
+import static org.gnori.booksmarket.api.controller.AuthorController.DEFAULT_PAGE_NUMBER;
+import static org.gnori.booksmarket.api.controller.AuthorController.DEFAULT_PAGE_SIZE;
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
 import jakarta.transaction.Transactional;
@@ -20,26 +22,23 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Transactional
 @RestController
-@RequestMapping("/api/genres")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreController {
 
-  public static final String DEFAULT_PAGE_NUMBER = "0";
-  public static final String DEFAULT_PAGE_SIZE = "10";
+  private static final String GENRE_URL = "/api/genres";
 
   GenreDao genreDao;
 
   GenreDtoFactory genreDtoFactory;
 
-  @GetMapping
+  @GetMapping(GENRE_URL)
   @ResponseStatus(HttpStatus.OK)
   public Page<GenreDto> fetchGenres(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
@@ -56,7 +55,7 @@ public class GenreController {
     return genreDtoFactory.createPageOfGenreDtoFrom(pageOfEntities);
   }
 
-  @PutMapping()
+  @PutMapping(GENRE_URL)
   @ResponseStatus(HttpStatus.OK)
   public GenreDto updateOrCreateGenre(
       @RequestParam(required = false) Optional<Long> id,
@@ -80,7 +79,7 @@ public class GenreController {
       var optionalGenre = genreDao.findById(id.get());
 
       if (optionalGenre.isEmpty()){
-        throw new NotFoundException(String.format("Genre with id:%d doesn't exist", id.get()));
+        throw new NotFoundException(String.format("Genre with id: %d doesn't exist", id.get()));
       } else {
         genreEntity = optionalGenre.get();
 
@@ -91,7 +90,7 @@ public class GenreController {
     return genreDtoFactory.createGenreDtoFrom(genreDao.saveAndFlush(genreEntity));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(GENRE_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteGenre(
       @PathVariable Long id) {
@@ -99,12 +98,12 @@ public class GenreController {
     var optionalGenre = genreDao.findById(id);
 
     if (optionalGenre.isEmpty()) {
-      throw new NotFoundException(String.format("Genre with id:%d doesn't exist", id));
+      throw new NotFoundException(String.format("Genre with id: %d doesn't exist", id));
     }
 
     if (!optionalGenre.get().getBooks().isEmpty()) {
       throw new BadRequestException(String.format(
-          "Genre with id:%d cannot be deleted. There are books by this genre", id));
+          "Genre with id: %d cannot be deleted. There are books by this genre", id));
     }
 
     genreDao.deleteById(id);

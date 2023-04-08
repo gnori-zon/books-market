@@ -1,5 +1,7 @@
 package org.gnori.booksmarket.api.controller;
 
+import static org.gnori.booksmarket.api.controller.AuthorController.DEFAULT_PAGE_NUMBER;
+import static org.gnori.booksmarket.api.controller.AuthorController.DEFAULT_PAGE_SIZE;
 import static org.gnori.booksmarket.api.controller.utils.NameUtils.processName;
 
 import jakarta.transaction.Transactional;
@@ -40,8 +42,6 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookController {
 
-  public static final String DEFAULT_PAGE_NUMBER = "0";
-  public static final String DEFAULT_PAGE_SIZE = "10";
   public static final String DATE_PATTERN = "YYYY-mm-DD";
 
 
