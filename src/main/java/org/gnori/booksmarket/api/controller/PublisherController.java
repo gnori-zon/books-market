@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,15 +29,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/publishers")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PublisherController {
+
+  private static final String PUBLISHER_URL = "/api/publishers";
 
   PublisherDao publisherDao;
 
   PublisherDtoFactory publisherDtoFactory;
 
-  @GetMapping
+  @GetMapping(PUBLISHER_URL)
   @ResponseStatus(HttpStatus.OK)
   public Page<PublisherDto> fetchPublishers(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
@@ -55,7 +55,7 @@ public class PublisherController {
     return publisherDtoFactory.createPageOfPublisherDtoFrom(pageOfEntities);
   }
 
-  @PutMapping
+  @PutMapping(PUBLISHER_URL)
   @ResponseStatus(HttpStatus.OK)
   public PublisherDto updateOrCreatePublisher(
       @RequestParam(required = false) Optional<Long> id,
@@ -79,7 +79,7 @@ public class PublisherController {
       var optionalPublisher = publisherDao.findById(id.get());
 
       if(optionalPublisher.isEmpty()) {
-        throw new NotFoundException(String.format("Publisher with id:%d doesn't exist", id.get()));
+        throw new NotFoundException(String.format("Publisher with id: %d doesn't exist", id.get()));
       } else {
         publisherEntity = optionalPublisher.get();
 
@@ -90,7 +90,7 @@ public class PublisherController {
     return publisherDtoFactory.createPublisherDtoFrom(publisherDao.saveAndFlush(publisherEntity));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(PUBLISHER_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deletePublisher(
       @PathVariable Long id) {
@@ -98,12 +98,12 @@ public class PublisherController {
     var optionalPublisher = publisherDao.findById(id);
 
     if (optionalPublisher.isEmpty()) {
-      throw new NotFoundException(String.format("Publisher with id:%d doesn't exist", id));
+      throw new NotFoundException(String.format("Publisher with id: %d doesn't exist", id));
     }
 
     if (!optionalPublisher.get().getAuthors().isEmpty()) {
       throw new BadRequestException(String.format(
-          "Publisher with id:%d cannot be deleted. There are authors by this publisher", id));
+          "Publisher with id: %d cannot be deleted. There are authors by this publisher", id));
     }
 
     publisherDao.deleteById(id);

@@ -13,6 +13,7 @@ import org.gnori.booksmarket.service.FileService;
 import org.gnori.booksmarket.storage.dao.BinaryContentDao;
 import org.gnori.booksmarket.storage.dao.BookDao;
 import org.gnori.booksmarket.storage.entity.BinaryContentEntity;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,10 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/binary-content")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BinaryContentController {
+
+  private static final String BINARY_CONTENT_URL = "/api/binary-content";
 
   BookDao bookDao;
 
@@ -40,14 +41,14 @@ public class BinaryContentController {
   FileService fileService;
 
 
-  @GetMapping("/{id}/image")
+  @GetMapping(BINARY_CONTENT_URL+"/{id}/image")
   @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<?> getImage(
+  public ResponseEntity<FileSystemResource> getImage(
       @PathVariable Long id) {
 
     var binaryContent = binaryContentDao.findById(id);
 
-    if(binaryContent.isEmpty() || binaryContent.get().getRaw() == null) {
+    if(binaryContent.isEmpty() || binaryContent.get().getImage() == null) {
       throw new NotFoundException(String.format("Binary content with id: %d does not exist",id));
     }
     var file = binaryContent.get();
@@ -57,7 +58,7 @@ public class BinaryContentController {
     var fileSystemResource = fileService.getFilesystemResource(bytes, "image_" + id);
 
     if(fileSystemResource==null) {
-      throw new InternalServerError("InternalServerError");
+      throw new InternalServerError("Internal server error");
     }
 
     return ResponseEntity.ok()
@@ -66,9 +67,9 @@ public class BinaryContentController {
         .body(fileSystemResource);
     }
 
-  @GetMapping("/{id}/raw")
+  @GetMapping(BINARY_CONTENT_URL+"/{id}/raw")
   @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<?> getRaw(
+  public ResponseEntity<FileSystemResource> getRaw(
       @PathVariable Long id) {
 
     var binaryContent = binaryContentDao.findById(id);
@@ -83,7 +84,7 @@ public class BinaryContentController {
     var fileSystemResource = fileService.getFilesystemResource(bytes, "raw_" + id);
 
     if(fileSystemResource==null) {
-      throw new InternalServerError("InternalServerError");
+      throw new InternalServerError("Internal server error");
     }
 
     return ResponseEntity.ok()
@@ -92,7 +93,7 @@ public class BinaryContentController {
         .body(fileSystemResource);
   }
 
-  @PutMapping
+  @PutMapping(BINARY_CONTENT_URL)
   @ResponseStatus(HttpStatus.OK)
   public void uploadBinaryContent(
       @RequestParam(name = "book_id") Long bookId,
@@ -138,7 +139,7 @@ public class BinaryContentController {
 
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(BINARY_CONTENT_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteBinaryContent(
       @PathVariable Long id) {

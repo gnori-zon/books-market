@@ -64,25 +64,28 @@ class GenreControllerTest {
 
   @BeforeAll
   void init() {
-    nameGenre = "History";
-    raw = GenreEntity.builder().id(1L).name(nameGenre).build();
     id = 1L;
+    nameGenre = "History";
+    raw = GenreEntity.builder().id(id).name(nameGenre).build();
   }
 
   private static final String GENRE_URL = "/api/genres";
 
   @Test
-  void fetchGenres() throws Exception {
+  void fetchGenresShouldReturnPageOfGenresDtoAndOk() throws Exception {
+
+    var secondNameGenre = "Non/fiction";
+    long secondId = 2L;
 
     var raw = new PageImpl<>(
         List.of(
-            GenreEntity.builder().id(1L).name(nameGenre).build(),
-            GenreEntity.builder().id(2L).name("Non/fiction").build()));
+            this.raw,
+            GenreEntity.builder().id(secondId).name(secondNameGenre).build()));
 
     var expected = new PageImpl<>(
         List.of(
-            GenreDto.builder().id(1L).name("History").build(),
-            GenreDto.builder().id(2L).name("Non/fiction").build()));
+            GenreDto.builder().id(id).name(nameGenre).build(),
+            GenreDto.builder().id(secondId).name(secondNameGenre).build()));
 
     when(genreDao.findAll((Pageable) Mockito.any())).thenReturn(raw);
     when(genreDtoFactory.createPageOfGenreDtoFrom(raw)).thenReturn(expected);
@@ -91,7 +94,7 @@ class GenreControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$..size", contains(2)))
         .andExpect(jsonPath("$..id", contains(1, 2)))
-        .andExpect(jsonPath("$..name", contains(nameGenre, "Non/fiction")));
+        .andExpect(jsonPath("$..name", contains(nameGenre, secondNameGenre)));
   }
 
   @Test
@@ -118,7 +121,7 @@ class GenreControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(
             result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-        .andExpect(result -> assertEquals(String.format(exceptionMessage),
+        .andExpect(result -> assertEquals(exceptionMessage,
             Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
     verifyNoInteractions(genreDao);
@@ -140,11 +143,11 @@ class GenreControllerTest {
   }
 
   @Test
-  public void updateGenreShouldReturnGenreDtoAndOk() throws Exception {
+  void updateGenreShouldReturnGenreDtoAndOk() throws Exception {
 
-    var rawBefore = GenreEntity.builder().id(1L).name("Genre").build();
+    var rawBefore = GenreEntity.builder().id(id).name("Genre").build();
 
-    var expected = GenreDto.builder().id(1L).name(nameGenre).build();
+    var expected = GenreDto.builder().id(id).name(nameGenre).build();
 
     when(genreDao.existsByNameIgnoreCase(nameGenre)).thenReturn(false);
     when(genreDao.findById(id)).thenReturn(Optional.of(rawBefore));
@@ -158,7 +161,7 @@ class GenreControllerTest {
   }
 
   @Test
-  public void updateGenreShouldThrowNotFoundExceptionAndNotFound() throws Exception {
+  void updateGenreShouldThrowNotFoundExceptionAndNotFound() throws Exception {
 
     final String exceptionMessage = "Genre with id: %d doesn't exist";
 
@@ -174,7 +177,7 @@ class GenreControllerTest {
   }
 
   @Test
-  public void deleteGenreShouldReturnOk() throws Exception {
+  void deleteGenreShouldReturnOk() throws Exception {
 
     raw.setBooks(Collections.emptyList());
 
@@ -187,7 +190,7 @@ class GenreControllerTest {
   }
 
   @Test
-  public void deleteGenreShouldThrowNotFoundExceptionAndNotFound() throws Exception {
+  void deleteGenreShouldThrowNotFoundExceptionAndNotFound() throws Exception {
 
     final String exceptionMessage = "Genre with id: %d doesn't exist";
 
@@ -204,7 +207,7 @@ class GenreControllerTest {
   }
 
   @Test
-  public void deleteGenreShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
+  void deleteGenreShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
 
     final String exceptionMessage = "Genre with id: %d cannot be deleted. There are books by this genre";
 

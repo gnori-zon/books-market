@@ -37,21 +37,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Transactional
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping()
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookController {
 
-  public static final String DATE_PATTERN = "YYYY-mm-DD";
-
+  public static final String DATE_PATTERN = "yyyy-MM-dd";
+  private static final String BOOK_URL = "/api/books";
 
   BookDao bookDao;
-  BookDtoFactory bookDtoFactory;
-  private final GenreDao genreDao;
-  private final AuthorDao authorDao;
-  private final PublisherDao publisherDao;
+  GenreDao genreDao;
+  AuthorDao authorDao;
+  PublisherDao publisherDao;
 
-  @GetMapping
+  BookDtoFactory bookDtoFactory;
+
+  @GetMapping(BOOK_URL)
   @ResponseStatus(HttpStatus.OK)
   Page<BookDto> fetchBooks(
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
@@ -116,7 +117,7 @@ public class BookController {
     return bookDtoFactory.createPageOfBookDtoFrom(pageOfEntities);
   }
 
-  @PutMapping()
+  @PutMapping(BOOK_URL)
   @ResponseStatus(HttpStatus.OK)
   public BookDto updateBook(
       @RequestParam(required = false) Optional<Long> id,
@@ -141,7 +142,7 @@ public class BookController {
     if(id.isPresent()) {
       var optionalBook = bookDao.findById(id.get());
       if(optionalBook.isEmpty()) {
-        throw new NotFoundException(String.format("Book with id:%d not founded", id.get()));
+        throw new NotFoundException(String.format("Book with id: %d not founded", id.get()));
       }
 
       bookEntity = optionalBook.get();
@@ -163,7 +164,7 @@ public class BookController {
       var newGenres = genreDao.findAllById(genreIds.get());
 
       if (newGenres.isEmpty()) {
-        throw new NotFoundException(String.format("Genres with id: %s not founded", genreIds));
+        throw new NotFoundException(String.format("Genres with id: %s not founded", genreIds.get()));
       }
 
       bookEntity.setGenres(newGenres);
@@ -201,7 +202,7 @@ public class BookController {
               lang -> language.get().equalsIgnoreCase(lang.getLanguage()))
           .findFirst().orElse(null);
       if (newLanguage == null) {
-        throw new NotFoundException(String.format("Language: %s not founded", language));
+        throw new NotFoundException(String.format("Language: %s not founded", language.get()));
       }
 
       bookEntity.setLanguage(newLanguage);
@@ -214,13 +215,13 @@ public class BookController {
     return bookDtoFactory.createBookDtoFrom(bookDao.saveAndFlush(bookEntity));
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping(BOOK_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   void deleteBook(
       @PathVariable Long id) {
 
     if (!bookDao.existsById(id)) {
-      throw new NotFoundException(String.format("Book with id:%d not founded", id));
+      throw new NotFoundException(String.format("Book with id: %d not founded", id));
     }
 
     bookDao.deleteById(id);

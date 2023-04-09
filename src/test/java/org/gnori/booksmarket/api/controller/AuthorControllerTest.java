@@ -44,7 +44,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringJUnitWebConfig
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = AuthorController.class)
-public class AuthorControllerTest {
+class AuthorControllerTest {
 
   @MockBean
   AuthorDao authorDao;
@@ -74,11 +74,11 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void fetchAuthorsShouldReturnPageOfAuthorsDtoAndOk() throws Exception {
+  void fetchAuthorsShouldReturnPageOfAuthorsDtoAndOk() throws Exception {
 
     var raw = new PageImpl<>(
         List.of(
-            AuthorEntity.builder().id(1L).firstName(firstName).lastName(lastName).build(),
+            this.raw,
             AuthorEntity.builder().id(2L).firstName("Petr").lastName("Ivanov").build()));
 
     var expected = new PageImpl<>(
@@ -98,7 +98,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void createAuthorShouldReturnAuthorDtoAndOk() throws Exception {
+  void createAuthorShouldReturnAuthorDtoAndOk() throws Exception {
 
     var expected = AuthorDto.builder().id(1L).firstName(firstName).lastName(lastName).build();
 
@@ -115,7 +115,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void createAuthorShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
+  void createAuthorShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
 
     final String exceptionMessage = "The \"first_name\" or \"last_name\" parameter is empty.";
 
@@ -130,7 +130,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void createAuthorShouldThrowBadRequestExceptionAndBadRequest2() throws Exception {
+  void createAuthorShouldThrowBadRequestExceptionAndBadRequest2() throws Exception {
 
     final String exceptionMessage = "Author \"%s %s\" already exists.";
 
@@ -148,7 +148,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void updateAuthorShouldReturnAuthorDtoAndOk() throws Exception {
+  void updateAuthorShouldReturnAuthorDtoAndOk() throws Exception {
 
     var expected = AuthorDto.builder().id(id).firstName("Petr").lastName("Ivanov").build();
 
@@ -168,7 +168,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void updateAuthorShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
+  void updateAuthorShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
 
     final String exceptionMessage = "The \"first_name\" and \"last_name\" parameter is empty.";
 
@@ -183,7 +183,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void updateAuthorShouldThrowNotFoundExceptionAndNotFound() throws Exception {
+  void updateAuthorShouldThrowNotFoundExceptionAndNotFound() throws Exception {
 
     final String exceptionMessage = "Author with id: %d does not exists.";
 
@@ -198,7 +198,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void updateAuthorShouldThrowBadRequestExceptionAndBadRequest2() throws Exception {
+  void updateAuthorShouldThrowBadRequestExceptionAndBadRequest2() throws Exception {
 
     final String exceptionMessage = "Author \"%s %s\" already exists.";
 
@@ -217,7 +217,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void deleteAuthorShouldReturnOk() throws Exception {
+  void deleteAuthorShouldReturnOk() throws Exception {
 
     raw.setBooks(Collections.emptyList());
 
@@ -230,7 +230,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void deleteShouldThrowNotFoundExceptionAndNotFound() throws Exception {
+  void deleteShouldThrowNotFoundExceptionAndNotFound() throws Exception {
 
     final String exceptionMessage = "Author with id: %d doesn't exist.";
 
@@ -246,7 +246,7 @@ public class AuthorControllerTest {
   }
 
   @Test
-  public void deleteShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
+  void deleteShouldThrowBadRequestExceptionAndBadRequest() throws Exception {
 
     final String exceptionMessage = "Author with id: %d cannot be deleted. There are books by this author.";
 
