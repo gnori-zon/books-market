@@ -71,8 +71,7 @@ public class BookEntity {
   Language language;
 
   @Builder.Default
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "book_id")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "bookId", cascade = CascadeType.ALL, orphanRemoval = true)
   List<ReviewEntity> reviews = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.EAGER,
