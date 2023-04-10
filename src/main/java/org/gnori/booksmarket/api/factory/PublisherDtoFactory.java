@@ -1,9 +1,9 @@
 package org.gnori.booksmarket.api.factory;
 
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.dto.AuthorDto;
 import org.gnori.booksmarket.api.dto.PublisherDto;
 import org.gnori.booksmarket.storage.entity.PublisherEntity;
@@ -15,11 +15,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PublisherDtoFactory {
+
+  @LogExecutionTime
   public Page<PublisherDto> createPageOfPublisherDtoFrom(Page<PublisherEntity> pageOfEntities) {
-    return new PageImpl<PublisherDto>(pageOfEntities.stream().map(this::createPublisherDtoFrom)
-        .collect(Collectors.toList()));
+    return new PageImpl<>(pageOfEntities.stream().map(this::createPublisherDtoFrom)
+        .toList());
   }
 
+  @LogExecutionTime
   public PublisherDto createPublisherDtoFrom(PublisherEntity publisher) {
     return PublisherDto.builder()
         .id(publisher.getId())
@@ -30,7 +33,7 @@ public class PublisherDtoFactory {
                 .firstName(author.getFirstName())
                 .lastName(author.getLastName())
                 .build()
-        ).collect(Collectors.toList()))
+        ).toList())
         .build();
   }
 

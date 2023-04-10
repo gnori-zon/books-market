@@ -9,6 +9,7 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.controller.utils.PageRequestBuilder;
 import org.gnori.booksmarket.api.dto.GenreDto;
 import org.gnori.booksmarket.api.exception.BadRequestException;
@@ -38,6 +39,7 @@ public class GenreController {
 
   GenreDtoFactory genreDtoFactory;
 
+  @LogExecutionTime
   @GetMapping(GENRE_URL)
   @ResponseStatus(HttpStatus.OK)
   public Page<GenreDto> fetchGenres(
@@ -55,6 +57,7 @@ public class GenreController {
     return genreDtoFactory.createPageOfGenreDtoFrom(pageOfEntities);
   }
 
+  @LogExecutionTime
   @PutMapping(GENRE_URL)
   @ResponseStatus(HttpStatus.OK)
   public GenreDto updateOrCreateGenre(
@@ -90,6 +93,7 @@ public class GenreController {
     return genreDtoFactory.createGenreDtoFrom(genreDao.saveAndFlush(genreEntity));
   }
 
+  @LogExecutionTime
   @DeleteMapping(GENRE_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteGenre(

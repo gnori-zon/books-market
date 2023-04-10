@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.exception.BadRequestException;
 import org.gnori.booksmarket.api.exception.InternalServerError;
 import org.gnori.booksmarket.api.exception.NotFoundException;
@@ -41,6 +42,7 @@ public class BinaryContentController {
   FileService fileService;
 
 
+  @LogExecutionTime
   @GetMapping(BINARY_CONTENT_URL+"/{id}/image")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<FileSystemResource> getImage(
@@ -67,6 +69,7 @@ public class BinaryContentController {
         .body(fileSystemResource);
     }
 
+  @LogExecutionTime
   @GetMapping(BINARY_CONTENT_URL+"/{id}/raw")
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<FileSystemResource> getRaw(
@@ -93,6 +96,7 @@ public class BinaryContentController {
         .body(fileSystemResource);
   }
 
+  @LogExecutionTime
   @PutMapping(BINARY_CONTENT_URL)
   @ResponseStatus(HttpStatus.OK)
   public void uploadBinaryContent(
@@ -139,6 +143,7 @@ public class BinaryContentController {
 
   }
 
+  @LogExecutionTime
   @DeleteMapping(BINARY_CONTENT_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteBinaryContent(

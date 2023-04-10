@@ -1,9 +1,9 @@
 package org.gnori.booksmarket.api.factory;
 
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.dto.AuthorDto;
 import org.gnori.booksmarket.api.dto.BookDto;
 import org.gnori.booksmarket.api.dto.GenreDto;
@@ -18,18 +18,20 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookDtoFactory {
 
+  @LogExecutionTime
   public Page<BookDto> createPageOfBookDtoFrom(Page<BookEntity> pageOfEntities, String prefixName) {
 
-    return new PageImpl<BookDto>(pageOfEntities.stream()
+    return new PageImpl<>(pageOfEntities.stream()
         .filter(book -> book.getName().startsWith(prefixName))
         .map(this::createBookDtoFrom)
-        .collect(Collectors.toList()));
+        .toList());
   }
 
+  @LogExecutionTime
   public Page<BookDto> createPageOfBookDtoFrom(Page<BookEntity> pageOfEntities) {
 
-    return new PageImpl<BookDto>(pageOfEntities.stream().map(this::createBookDtoFrom)
-        .collect(Collectors.toList()));
+    return new PageImpl<>(pageOfEntities.stream().map(this::createBookDtoFrom)
+        .toList());
   }
 
   public BookDto createBookDtoFrom(BookEntity entity) {
@@ -46,20 +48,20 @@ public class BookDtoFactory {
                 .title(review.getTitle())
                 .content(review.getContent())
                 .build()
-        ).collect(Collectors.toList()))
+        ).toList())
         .authors(entity.getAuthors().stream().map(
             author -> AuthorDto.builder()
                 .id(author.getId())
                 .firstName(author.getFirstName())
                 .lastName(author.getLastName())
                 .build()
-        ).collect(Collectors.toList()))
+        ).toList())
         .genres(entity.getGenres().stream().map(
             genre -> GenreDto.builder()
                 .id(genre.getId())
                 .name(genre.getName())
                 .build()
-        ).collect(Collectors.toList()))
+        ).toList())
         .build();
   }
 }

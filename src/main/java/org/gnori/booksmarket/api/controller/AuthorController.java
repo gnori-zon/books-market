@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.controller.utils.PageRequestBuilder;
 import org.gnori.booksmarket.api.dto.AuthorDto;
 import org.gnori.booksmarket.api.exception.BadRequestException;
@@ -38,6 +39,7 @@ public class AuthorController {
 
   AuthorDtoFactory authorDtoFactory;
 
+  @LogExecutionTime
   @GetMapping(AUTHOR_URL)
   @ResponseStatus(HttpStatus.OK)
   public Page<AuthorDto> fetchAuthors(
@@ -57,6 +59,7 @@ public class AuthorController {
     return authorDtoFactory.createPageOfAuthorDtoFrom(pageOfEntities);
   }
 
+  @LogExecutionTime
   @PutMapping(AUTHOR_URL)
   @ResponseStatus(HttpStatus.OK)
   public AuthorDto updateOrCreateAuthor(
@@ -122,6 +125,7 @@ public class AuthorController {
     }
   }
 
+  @LogExecutionTime
   @DeleteMapping(AUTHOR_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteAuthor(

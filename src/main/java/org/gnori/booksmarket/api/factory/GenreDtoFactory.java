@@ -1,9 +1,9 @@
 package org.gnori.booksmarket.api.factory;
 
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.dto.BookDto;
 import org.gnori.booksmarket.api.dto.GenreDto;
 import org.gnori.booksmarket.storage.entity.GenreEntity;
@@ -16,11 +16,13 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreDtoFactory {
 
+  @LogExecutionTime
   public Page<GenreDto> createPageOfGenreDtoFrom(Page<GenreEntity> pageOfEntities) {
 
-    return new PageImpl<GenreDto>( pageOfEntities.stream().map(this::createGenreDtoFrom).toList());
+    return new PageImpl<>( pageOfEntities.stream().map(this::createGenreDtoFrom).toList());
   }
 
+  @LogExecutionTime
   public GenreDto createGenreDtoFrom(GenreEntity genre) {
 
     return GenreDto.builder()
@@ -31,7 +33,7 @@ public class GenreDtoFactory {
                 .id(book.getId())
                 .name(book.getName())
                 .build()
-        ).collect(Collectors.toList()))
+        ).toList())
         .build();
   }
 }

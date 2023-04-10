@@ -13,10 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(AuthenticationException.class)
   @ResponseBody
+  @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<Object> handleAuthenticationException(RuntimeException ex){
-    log.error("Exception during execution of application", ex);
 
     HttpStatus status;
     if (ex instanceof BusinessException businessException) {

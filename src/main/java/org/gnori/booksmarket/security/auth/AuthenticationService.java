@@ -3,6 +3,7 @@ package org.gnori.booksmarket.security.auth;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.gnori.booksmarket.aop.LogExecutionTime;
 import org.gnori.booksmarket.api.exception.UsernameNotFoundException;
 import org.gnori.booksmarket.security.config.JwtService;
 import org.gnori.booksmarket.security.user.Role;
@@ -26,6 +27,7 @@ public class AuthenticationService {
 
   AuthenticationManager authenticationManager;
 
+  @LogExecutionTime
   public AuthenticationResponse register(RegisterRequest request) {
 
     var user = User.builder()
@@ -43,6 +45,7 @@ public class AuthenticationService {
         .build();
   }
 
+  @LogExecutionTime
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
     authenticationManager.authenticate(
