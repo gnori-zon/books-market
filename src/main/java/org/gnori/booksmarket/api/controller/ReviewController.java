@@ -44,7 +44,7 @@ public class ReviewController {
   @LogExecutionTime
   @GetMapping(REVIEW_URL)
   @ResponseStatus(HttpStatus.OK)
-  public Page<ReviewDto> fetchGenres(
+  public Page<ReviewDto> fetchReviews(
       @RequestParam(name = "book_id") Long bookId,
       @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
       @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size) {
@@ -108,7 +108,7 @@ public class ReviewController {
   @LogExecutionTime
   @DeleteMapping(REVIEW_URL+"/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public void deleteGenre(
+  public void deleteReview(
       @PathVariable Long id) {
 
     if (!reviewDao.existsById(id)) {
