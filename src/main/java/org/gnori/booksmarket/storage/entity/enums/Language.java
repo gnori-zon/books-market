@@ -19,5 +19,5 @@ public enum Language {
   POR("Portuguese"),
   DEU("GERMAN");
 
-  String language;
+  String text;
 }

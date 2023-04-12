@@ -202,7 +202,7 @@ public class BookController {
 
     if (language.isPresent()) {
       var newLanguage = Arrays.stream(Language.values()).filter(
-              lang -> language.get().equalsIgnoreCase(lang.getLanguage()))
+              lang -> language.get().equalsIgnoreCase(lang.getText()))
           .findFirst().orElse(null);
       if (newLanguage == null) {
         throw new NotFoundException(String.format("Language: %s not founded", language.get()));

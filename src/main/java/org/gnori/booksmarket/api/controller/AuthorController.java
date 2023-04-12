@@ -48,8 +48,12 @@ public class AuthorController {
       @RequestParam(required = false, name = "sort_by_first_name") Optional<String> sortByFirstName,
       @RequestParam(required = false, name = "sort_by_last_name") Optional<String> sortByLastName) {
 
-    if (page < 0) page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
-    if (size < 0) size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+    if (page < 0) {
+      page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
+    }
+    if (size < 0) {
+      size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+    }
 
     var pageParams = PageRequestBuilder.buildPageRequestForFirstAndLastName(page, size,
         sortByFirstName, sortByLastName);
@@ -63,9 +67,9 @@ public class AuthorController {
   @PutMapping(AUTHOR_URL)
   @ResponseStatus(HttpStatus.OK)
   public AuthorDto updateOrCreateAuthor(
-    @RequestParam(required = false) Optional<Long> id,
-    @RequestParam(required = false, name = "first_name") Optional<String> firstName,
-    @RequestParam(required = false, name = "last_name") Optional<String> lastName) {
+      @RequestParam(required = false) Optional<Long> id,
+      @RequestParam(required = false, name = "first_name") Optional<String> firstName,
+      @RequestParam(required = false, name = "last_name") Optional<String> lastName) {
 
     if (id.isPresent()) {
 
@@ -96,37 +100,39 @@ public class AuthorController {
       if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
           author.getFirstName(), author.getLastName())) {
         throw new BadRequestException(
-            String.format("Author \"%s %s\" already exists.", author.getFirstName(), author.getLastName())
+            String.format("Author \"%s %s\" already exists.", author.getFirstName(),
+                author.getLastName())
         );
       }
       return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(author));
 
-    } else {
-
-      if(firstName.isEmpty() || lastName.isEmpty() || firstName.get().trim().isEmpty() || lastName.get().trim().isEmpty()) {
-        throw new BadRequestException("The \"first_name\" or \"last_name\" parameter is empty.");
-      }
-
-      if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName.get().trim(),
-          lastName.get().trim())) {
-        throw new BadRequestException(
-            String.format("Author \"%s %s\" already exists.", firstName.get(), lastName.get())
-        );
-      }
-
-      var newFirstName = processName(firstName.get());
-
-      var newLastName = processName(lastName.get());
-
-      return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(AuthorEntity.builder()
-          .firstName(newFirstName)
-          .lastName(newLastName)
-          .build()));
     }
+
+    if (firstName.isEmpty() || lastName.isEmpty() || firstName.get().trim().isEmpty()
+        || lastName.get().trim().isEmpty()) {
+      throw new BadRequestException("The \"first_name\" or \"last_name\" parameter is empty.");
+    }
+
+    if (authorDao.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName.get().trim(),
+        lastName.get().trim())) {
+      throw new BadRequestException(
+          String.format("Author \"%s %s\" already exists.", firstName.get(), lastName.get())
+      );
+    }
+
+    var newFirstName = processName(firstName.get());
+
+    var newLastName = processName(lastName.get());
+
+    return authorDtoFactory.createAuthorDtoFrom(authorDao.saveAndFlush(AuthorEntity.builder()
+        .firstName(newFirstName)
+        .lastName(newLastName)
+        .build()));
+
   }
 
   @LogExecutionTime
-  @DeleteMapping(AUTHOR_URL+"/{id}")
+  @DeleteMapping(AUTHOR_URL + "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteAuthor(
       @PathVariable Long id) {

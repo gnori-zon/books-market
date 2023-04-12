@@ -2,6 +2,8 @@ package org.gnori.booksmarket.api.controller.utils;
 
 public class NameUtils {
 
+  private NameUtils(){}
+
   public static String processName(String name) {
     name = name.trim();
     return name.length() >= 2 ?

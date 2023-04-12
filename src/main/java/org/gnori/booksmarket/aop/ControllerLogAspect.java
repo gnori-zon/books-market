@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ControllerLogAspect {
 
-  private static final String ERROR_TEXT_CONTROLLER = "::ASPECT:: Controller %s threw exception: %s";
+  private static final String ERROR_TEXT_CONTROLLER = "::ASPECT:: Controller threw exception:";
   private static final String DEBUG_TEXT_ENTRY_CONTROLLER = "::ASPECT:: entry into method {} of class {} with {}";
   private static final String DEBUG_TEXT_EXIT_CONTROLLER = "::ASPECT:: exit from class {} method {}";
 
   @AfterThrowing(pointcut = "execution(* org.gnori.booksmarket.api.controller.*.*(..))", throwing = "ex")
-  public void afterThrowingControllersMethods(Exception ex) throws Throwable {
+  public void afterThrowingControllersMethods(Exception ex) {
 
-    log.error(ERROR_TEXT_CONTROLLER,ex);
+    log.error(ERROR_TEXT_CONTROLLER + ex.getMessage());
   }
 
   @Around(value = "execution(* org.gnori.booksmarket.api.controller.*.*(..))")
@@ -30,7 +30,7 @@ public class ControllerLogAspect {
 
 
   @AfterThrowing(pointcut = "execution(* org.gnori.booksmarket.security.auth.AuthenticationController.*(..))", throwing = "ex")
-  public void afterThrowingAuthenticationControllerMethods(Exception ex) throws Throwable {
+  public void afterThrowingAuthenticationControllerMethods(Exception ex) {
 
     log.error(ERROR_TEXT_CONTROLLER,ex);
   }

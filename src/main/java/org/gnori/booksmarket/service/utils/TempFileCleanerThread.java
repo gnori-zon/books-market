@@ -8,6 +8,7 @@ public class TempFileCleanerThread extends Thread{
 
   private static final String INFO_TEXT_TEMP_FILE_CLEANER_RUN = "[STARTED] TempFileCleaner : {}";
   private static final String INFO_TEXT_TEMP_FILE_CLEARED_RESOURCE = "[CLEARED_RESOURCE] TempFileCleaner : {}";
+  private static final String ERROR_TEXT_INTERRUPTED_EXCEPTION = "[INTERRUPTED_EXCEPTION] TempFileCleaner : {}";
 
   private final ReferenceQueue<Object> referenceQueue;
   public TempFileCleanerThread(ReferenceQueue<Object> referenceQueue) {
@@ -28,7 +29,9 @@ public class TempFileCleanerThread extends Thread{
         unusedReference.delete();
         unusedReference.clear();
       } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+
+        log.error(ERROR_TEXT_INTERRUPTED_EXCEPTION, e.getMessage());
+        Thread.currentThread().interrupt();
       }
     }
   }

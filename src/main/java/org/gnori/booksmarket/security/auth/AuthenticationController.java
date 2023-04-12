@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
 
-  private final static String AUTHENTICATION_URL = "/api/auth";
+  private static final String AUTHENTICATION_URL = "/api/auth";
 
   AuthenticationService authenticationService;
 

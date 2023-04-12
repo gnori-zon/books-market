@@ -41,7 +41,7 @@ public class BookDtoFactory {
         .description(entity.getDescription())
         .releaseDate(entity.getReleaseDate())
         .publisher(entity.getPublisher().getName())
-        .language(entity.getLanguage().getLanguage())
+        .language(entity.getLanguage().getText())
         .reviews(entity.getReviews().stream().map(
             review-> ReviewDto.builder()
                 .id(review.getId())

@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 import org.gnori.booksmarket.api.exception.BadRequestException;
@@ -89,7 +91,7 @@ class BinaryContentControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.parseMediaType(raw.getTypeImage())));
 
-    file.delete();
+    Files.delete(Path.of(file.getPath()));
   }
 
   @Test
@@ -134,7 +136,7 @@ class BinaryContentControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.parseMediaType(raw.getTypeRaw())));
 
-    file.delete();
+    Files.delete(Path.of(file.getPath()));
   }
 
   @Test

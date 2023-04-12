@@ -17,7 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CustomErrorController implements ErrorController {
 
-  private static final String PATH = "/error";
+  private static final String PATH = "api/error";
 
   ErrorAttributes errorAttributes;
 

@@ -119,7 +119,7 @@ class BookControllerTest {
         List.of(BookDto.builder()
                 .id(id).name(nameBook)
                 .description(this.raw.getDescription())
-                .language(this.raw.getLanguage().getLanguage())
+                .language(this.raw.getLanguage().getText())
                 .publisher(this.raw.getPublisher().getName())
                 .reviews(this.raw.getReviews().stream().map(
                     reviews -> ReviewDto.builder()
@@ -147,7 +147,7 @@ class BookControllerTest {
         .andExpect(jsonPath("$..description", contains(this.raw.getDescription())))
         .andExpect(jsonPath("$..authors..first_name", contains(this.raw.getAuthors().get(0).getFirstName())))
         .andExpect(jsonPath("$..authors..last_name", contains(this.raw.getAuthors().get(0).getLastName())))
-        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getLanguage())))
+        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getText())))
         .andExpect(jsonPath("$..reviews..title", contains(this.raw.getReviews().get(0).getTitle(),this.raw.getReviews().get(1).getTitle())))
         .andExpect(jsonPath("$..reviews..content", contains(this.raw.getReviews().get(0).getContent(),this.raw.getReviews().get(1).getContent())))
         .andExpect(jsonPath("$..publisher", contains(this.raw.getPublisher().getName())));
@@ -190,7 +190,7 @@ class BookControllerTest {
     var expected = BookDto.builder()
         .id(id).name(nameBook)
         .description(this.raw.getDescription())
-        .language(this.raw.getLanguage().getLanguage())
+        .language(this.raw.getLanguage().getText())
         .publisher(this.raw.getPublisher().getName())
         .reviews(this.raw.getReviews().stream().map(
             reviews -> ReviewDto.builder()
@@ -221,7 +221,7 @@ class BookControllerTest {
     when(bookDtoFactory.createBookDtoFrom(Mockito.any())).thenReturn(expected);
 
     mockMvc.perform(put(BOOK_URL + "?name=" + nameBook + "&description=" + raw.getDescription()
-                + "&author_ids=2&genre_ids=1&release_date=2020-09-12&language=" + raw.getLanguage().getLanguage() + "&publisher_id=3"
+                + "&author_ids=2&genre_ids=1&release_date=2020-09-12&language=" + raw.getLanguage().getText() + "&publisher_id=3"
             ))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(1)))
@@ -229,7 +229,7 @@ class BookControllerTest {
         .andExpect(jsonPath("$..description", contains(this.raw.getDescription())))
         .andExpect(jsonPath("$..authors..first_name", contains(this.raw.getAuthors().get(0).getFirstName())))
         .andExpect(jsonPath("$..authors..last_name", contains(this.raw.getAuthors().get(0).getLastName())))
-        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getLanguage())))
+        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getText())))
         .andExpect(jsonPath("$..reviews..title", contains(this.raw.getReviews().get(0).getTitle(),this.raw.getReviews().get(1).getTitle())))
         .andExpect(jsonPath("$..reviews..content", contains(this.raw.getReviews().get(0).getContent(),this.raw.getReviews().get(1).getContent())))
         .andExpect(jsonPath("$..publisher", contains(this.raw.getPublisher().getName())));
@@ -259,7 +259,7 @@ class BookControllerTest {
     var expected = BookDto.builder()
         .id(id).name(newName)
         .description(this.raw.getDescription())
-        .language(this.raw.getLanguage().getLanguage())
+        .language(this.raw.getLanguage().getText())
         .publisher(this.raw.getPublisher().getName())
         .reviews(this.raw.getReviews().stream().map(
             reviews -> ReviewDto.builder()
@@ -286,7 +286,7 @@ class BookControllerTest {
         .andExpect(jsonPath("$..description", contains(this.raw.getDescription())))
         .andExpect(jsonPath("$..authors..first_name", contains(this.raw.getAuthors().get(0).getFirstName())))
         .andExpect(jsonPath("$..authors..last_name", contains(this.raw.getAuthors().get(0).getLastName())))
-        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getLanguage())))
+        .andExpect(jsonPath("$..language", contains(this.raw.getLanguage().getText())))
         .andExpect(jsonPath("$..reviews..title", contains(this.raw.getReviews().get(0).getTitle(),this.raw.getReviews().get(1).getTitle())))
         .andExpect(jsonPath("$..reviews..content", contains(this.raw.getReviews().get(0).getContent(),this.raw.getReviews().get(1).getContent())))
         .andExpect(jsonPath("$..publisher", contains(this.raw.getPublisher().getName())));
