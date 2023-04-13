@@ -22,12 +22,12 @@ The subject area is presented below:
 
 
 ## Endpoints
-Postman collection : 
+Postman collection : <a href="https://github.com/gnori-zon/books-market/blob/master/books-market.postman_collection.json">Collection</a>
 
 ## Requests
 ![image](https://user-images.githubusercontent.com/108410527/231857829-43271a64-ea38-4876-a38f-78598e70bce7.png)
-![image](https://user-images.githubusercontent.com/108410527/231857903-3e5006ae-9302-495a-9cb2-90bc15a83db0.png)
-![image](https://user-images.githubusercontent.com/108410527/231857967-7b671800-2d33-45ad-8c2a-ceb08d2a1f39.png)
+![image](https://user-images.githubusercontent.com/108410527/231860535-4c4f1e70-7078-4c23-8e03-85cac149cca0.png)
+![image](https://user-images.githubusercontent.com/108410527/231860611-909897ac-813c-4c65-936f-b247522c31cf.png)
 ![image](https://user-images.githubusercontent.com/108410527/231858015-5cdb0774-9ca8-4d3c-8603-d0b8316d654b.png)
 ![image](https://user-images.githubusercontent.com/108410527/231858191-4ce5d590-e50c-42db-b2ff-3a930feb2740.png)
 ![image](https://user-images.githubusercontent.com/108410527/231858250-8eac1441-49db-4180-a566-5de5d174b155.png)
