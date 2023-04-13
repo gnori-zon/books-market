@@ -1,0 +1,1015 @@
+{
+	"info": {
+		"_postman_id": "4849f118-9590-48cf-83e7-d545ddf3200d",
+		"name": "books-market",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21649547"
+	},
+	"item": [
+		{
+			"name": "Author",
+			"item": [
+				{
+					"name": "get page authors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/authors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authors"
+							]
+						},
+						"description": "Request params:\n\n- page\n    \n\ntype: number | default= 0\n\n- size\n    \n\ntype: number | default= 10\n\n- sort_by_first_name\n    \n\ntype: string | optional | value : asc/desc\n\n- sort_by_last_name\n    \n\ntype: string | optional | value : asc/desc"
+					},
+					"response": []
+				},
+				{
+					"name": "create author",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODEzMjQzOTgsImV4cCI6MTY4MTMyNTgzOH0.GR6ptSKb6grUe8G8gKCqwPY8ggQoj8iqqj3m_tuLts8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/authors?first_name=Kir&last_name=Bulichev",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authors"
+							],
+							"query": [
+								{
+									"key": "first_name",
+									"value": "Kir"
+								},
+								{
+									"key": "last_name",
+									"value": "Bulichev"
+								}
+							]
+						},
+						"description": "Request params:\n\n- first_name\n    \n\ntype: string | required\n\n- last_name\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "update author",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODEzMjQzOTgsImV4cCI6MTY4MTMyNTgzOH0.GR6ptSKb6grUe8G8gKCqwPY8ggQoj8iqqj3m_tuLts8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/authors?first_name=Kir&last_name=Bulichev&id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authors"
+							],
+							"query": [
+								{
+									"key": "first_name",
+									"value": "Kir"
+								},
+								{
+									"key": "last_name",
+									"value": "Bulichev"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- id\n    \n\ntype: number | required\n\n- first_name\n    \n\ntype: string | required\n\n- last_name\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "delete author",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODEzMjQzOTgsImV4cCI6MTY4MTMyNTgzOH0.GR6ptSKb6grUe8G8gKCqwPY8ggQoj8iqqj3m_tuLts8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/authors/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authors",
+								"2"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				}
+			],
+			"description": "#### **AUTHOR_URL : /api/authors**"
+		},
+		{
+			"name": "Book",
+			"item": [
+				{
+					"name": "get page books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/books?page=0&size=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- page\n    \n\ntype: number | default= 0\n\n- size\n    \n\ntype: number | default= 10\n\n- prefix_name\n    \n\ntype: string | optional\n\n- author_ids\n    \n\ntype: string | optional | comma separated\n\n- genre_ids\n    \n\ntype: string | optional | comma separated\n\n- publisher_ids\n    \n\ntype: string | optional | comma separated\n\n- sort_by_release_date\n    \n\ntype: string | optional | value : asc/desc\n\n- sort_by_name\n    \n\ntype: string | optional | value : asc/desc"
+					},
+					"response": []
+				},
+				{
+					"name": "create book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/books?name=Bad book&description=is really bad book in the world&author_ids=1&genre_ids=1&release_date=2023-03-25T20:13:04.738+00:00&language=english&publisher_id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Bad book"
+								},
+								{
+									"key": "description",
+									"value": "is really bad book in the world"
+								},
+								{
+									"key": "author_ids",
+									"value": "1"
+								},
+								{
+									"key": "genre_ids",
+									"value": "1"
+								},
+								{
+									"key": "release_date",
+									"value": "2023-03-25T20:13:04.738+00:00"
+								},
+								{
+									"key": "language",
+									"value": "english"
+								},
+								{
+									"key": "publisher_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- name\n    \n\ntype: string | required\n\n- description\n    \n\ntype: string | required\n\n- author_ids\n    \n\ntype: string | required | comma separated\n\n- genre_ids\n    \n\ntype: string | required | comma separated\n\n- publisher_id\n    \n\ntype: string | required | comma separated\n\n- release_date\n    \n\ntype: string | required | yyyy-MM-dd\n\n- language\n    \n\ntype: string | required | considering ISO 639-3"
+					},
+					"response": []
+				},
+				{
+					"name": "update book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/books?name=Bad book&description=is really bad book in the world&author_ids=1&genre_ids=1&release_date=2023-03-25T20:13:04.738+00:00&language=english&publisher_id=1&id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Bad book"
+								},
+								{
+									"key": "description",
+									"value": "is really bad book in the world"
+								},
+								{
+									"key": "author_ids",
+									"value": "1"
+								},
+								{
+									"key": "genre_ids",
+									"value": "1"
+								},
+								{
+									"key": "release_date",
+									"value": "2023-03-25T20:13:04.738+00:00"
+								},
+								{
+									"key": "language",
+									"value": "english"
+								},
+								{
+									"key": "publisher_id",
+									"value": "1"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- id\n    \n\ntype: number | required\n\n- name\n    \n\ntype: string | optional\n\n- description\n    \n\ntype: string | optional\n\n- author_ids\n    \n\ntype: string | optional | comma separated\n\n- genre_ids\n    \n\ntype: string | optional | comma separated\n\n- publisher_id\n    \n\ntype: string | optional | comma separated\n\n- release_date\n    \n\ntype: string | optional | yyyy-MM-dd\n\n- language\n    \n\ntype: string | optional | considering ISO 639-3"
+					},
+					"response": []
+				},
+				{
+					"name": "delete book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/books/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"books",
+								"2"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				}
+			],
+			"description": "#### **BOOK_URL : /api/books**"
+		},
+		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "get page genre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODA3MjU0OTQsImV4cCI6MTY4MDcyNjkzNH0.vYqIV2JH_Mi8-09-i8Q11XCZeSQeX2Fw7cshnVkbPuM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"genres"
+							]
+						},
+						"description": "Request params:\n\n- page\n    \n\ntype: number | default= 0\n\n- size\n    \n\ntype: number | default= 10\n\n- sort_by_name\n    \n\ntype: string | optional | value : asc/desc"
+					},
+					"response": []
+				},
+				{
+					"name": "update genre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODA4MTM0MDEsImV4cCI6MTY4MDgxNDg0MX0.OP2qc3B6iqCJ1p1g-4IpExbRf5T-8Vgr4hdOPUZe7d8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/genres?id=1&name=new Name",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"genres"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "new Name"
+								}
+							]
+						},
+						"description": "Request params:\n\n- id\n    \n\ntype: number | required\n\n- name\n    \n\ntype: string | optional"
+					},
+					"response": []
+				},
+				{
+					"name": "create genre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODEzMzE2NDAsImV4cCI6MTY4MTMzMzA4MH0.8Um9UzF3mZWYMgdY3hFks2UndCw1nPE9E_QpE0gaBZs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/genres?name=nameGenre",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"genres"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "nameGenre"
+								}
+							]
+						},
+						"description": "Request params:\n\n- name\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "delete genre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODA4MTM0MDEsImV4cCI6MTY4MDgxNDg0MX0.OP2qc3B6iqCJ1p1g-4IpExbRf5T-8Vgr4hdOPUZe7d8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/genres/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"genres",
+								"1"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				}
+			],
+			"description": "##### GENRE_URL : /api/genres"
+		},
+		{
+			"name": "Publisher",
+			"item": [
+				{
+					"name": "get page publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/publishers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"publishers"
+							]
+						},
+						"description": "Request params:\n\n- page\n    \n\ntype: number | default= 0\n\n- size\n    \n\ntype: number | default= 10\n\n- sort_by_name\n    \n\ntype: string | optional | value : asc/desc"
+					},
+					"response": []
+				},
+				{
+					"name": "create publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/publishers?name=IIM",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"publishers"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "IIM"
+								}
+							]
+						},
+						"description": "Request params:\n\n- name\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "update publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/publishers?id=1&name=pLp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"publishers"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "pLp"
+								}
+							]
+						},
+						"description": "Request params:\n\n- id\n    \n\ntype: number | required\n\n- name\n    \n\ntype: string | optional"
+					},
+					"response": []
+				},
+				{
+					"name": "delete publisher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODE0MDczOTAsImV4cCI6MTY4MTQwODgzMH0.dv7K0PTYltGfXX0duvtNdQ6AsxWoiL2gP3W1xLXtMHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/publishers/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"publishers",
+								"1"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				}
+			],
+			"description": "##### PUBLISHER_URL : /api/publishers"
+		},
+		{
+			"name": "Binary content",
+			"item": [
+				{
+					"name": "get image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNTk1ODIsImV4cCI6MTY4MTE2MTAyMn0.9vAk41dloDdXzkLJ4ZLGjSSKWNZoeglygAOu4gJLblA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/binary-content/1/image",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"binary-content",
+								"1",
+								"image"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				},
+				{
+					"name": "get raw",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNTk1ODIsImV4cCI6MTY4MTE2MTAyMn0.9vAk41dloDdXzkLJ4ZLGjSSKWNZoeglygAOu4gJLblA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/binary-content/1/raw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"binary-content",
+								"1",
+								"raw"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				},
+				{
+					"name": "delete binary content",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODA3MjYwMjEsImV4cCI6MTY4MDcyNzQ2MX0.9EsufXMWRMkNlEKCTexouz-a3BcefReGSyVPyyihipg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/binary-content/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"binary-content",
+								"1"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				},
+				{
+					"name": "update or create binary content",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNTk1ODIsImV4cCI6MTY4MTE2MTAyMn0.9vAk41dloDdXzkLJ4ZLGjSSKWNZoeglygAOu4gJLblA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "raw",
+									"type": "file",
+									"src": "/D:/devProjects/otherTrash/EndPointsFromMicroservices .txt"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/D:/devProjects/otherTrash/addUserForImage.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/binary-content?book_id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"binary-content"
+							],
+							"query": [
+								{
+									"key": "book_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required\n\nRequest part:\n\n- raw\n    \n\ntype: multipart file | optional\n\n- image\n    \n\ntype: multipart file | optional\n\nraw or image must be present"
+					},
+					"response": []
+				}
+			],
+			"description": "##### BINARY_CONTENT_URL : /api/binary-content\n\nid == book_id"
+		},
+		{
+			"name": "Review",
+			"item": [
+				{
+					"name": "get review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/reviews?book_id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "book_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- book_id\n    \n\ntype: number | required\n\n- page\n    \n\ntype: number | default= 0\n\n- size\n    \n\ntype: number | default= 10"
+					},
+					"response": []
+				},
+				{
+					"name": "create review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODEzMjQyOTUsImV4cCI6MTY4MTMyNTczNX0.BTjM6d03QJPvRss0etBVMuU6J-kHd6fedQ7v4Ba9Sew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/reviews?title=Comment Title&content=Comment Content&book_id=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Comment Title"
+								},
+								{
+									"key": "content",
+									"value": "Comment Content"
+								},
+								{
+									"key": "book_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request params:\n\n- book_id\n    \n\ntype: number | required\n\n- title\n    \n\ntype: string | required\n\n- content\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "update review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/reviews?book_id=1&id=1&title=new title&content=new content&content=new content",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "book_id",
+									"value": "1"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "title",
+									"value": "new title"
+								},
+								{
+									"key": "content",
+									"value": "new content"
+								},
+								{
+									"key": "content",
+									"value": "new content"
+								}
+							]
+						},
+						"description": "Request params:\n\n- book_id\n    \n\ntype: number | required\n\n- id\n    \n\ntype: number | required\n\n- title\n    \n\ntype: string | optional\n\n- content\n    \n\ntype: string | optional"
+					},
+					"response": []
+				},
+				{
+					"name": "delete review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0X3VzZXIiLCJpYXQiOjE2ODExNjQyNDgsImV4cCI6MTY4MTE2NTY4OH0.dNpLgpwphvi7bzlWbnzMBngO1NU8KKcJ8IGfixICr_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/reviews/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"1"
+							]
+						},
+						"description": "Path params:\n\n- id\n    \n\ntype: number | required"
+					},
+					"response": []
+				}
+			],
+			"description": "##### REVIEW_URL : /api/reviews"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"test_user\",\n    \"password\" : \"test_password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Body params:\n\n- username\n    \n\ntype: string | required\n\n- password\n    \n\ntype: string | required"
+					},
+					"response": []
+				},
+				{
+					"name": "authenticate",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"test_user\",\n    \"password\" : \"test_password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/authenticate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"authenticate"
+							]
+						},
+						"description": "Body params:\n\n- username\n    \n\ntype: string | required\n\n- password\n    \n\ntype: string | required"
+					},
+					"response": []
+				}
+			],
+			"description": "##### AUTHENTICATION_URL : /api/auth"
+		}
+	]
+}
