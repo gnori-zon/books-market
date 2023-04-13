@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.5'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'org.gnori'
@@ -15,7 +16,9 @@ configurations {
 }
 
 bootJar {
-    archiveName = "$project.name".concat(".jar")
+    archiveBaseName = 'books-market'
+    archiveVersion = '1.0.0'
+    archiveFileName  = "$project.name".concat(".jar")
 }
 
 repositories {
@@ -42,3 +45,5 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
