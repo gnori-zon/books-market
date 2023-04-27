@@ -7,11 +7,12 @@ services:
       context: .
     container_name: app
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8080:8080"
+    network_mode: host
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/books-market-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/books-market-db
       - SPRING_DATASOURCE_USERNAME=user01
       - SPRING_DATASOURCE_PASSWORD=password01
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -19,6 +20,9 @@ services:
   db:
     image: 'postgres:14.5-alpine'
     container_name: db
+    network_mode: host
+    ports:
+        - "5432:5432"
     environment:
       - POSTGRES_DB=books-market-db
       - POSTGRES_USER=user01
