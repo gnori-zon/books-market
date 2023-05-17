@@ -57,4 +57,8 @@ public interface BookDao extends JpaRepository<BookEntity,Long> {
       @Param("g_ids") List<Long> genreIds, @Param("p_ids") List<Long> publisherIds, Pageable pageable);
 
   Page<BookEntity> findAllByNameStartingWith(String prefix, Pageable pageable);
+  @Query(nativeQuery = true, value = "select exists(select book.* "
+      + "from book left join book_author ba on book.id = ba.book_id "
+      + "where book.publisher_id = :p_id and  ba.author_id = :a_id)")
+  boolean existsByPublisherIdAndAuthorId(@Param("p_id") Long publisherId, @Param("a_id")Long authorId);
 }

@@ -23,6 +23,7 @@ import org.gnori.booksmarket.storage.dao.AuthorDao;
 import org.gnori.booksmarket.storage.dao.BookDao;
 import org.gnori.booksmarket.storage.dao.GenreDao;
 import org.gnori.booksmarket.storage.dao.PublisherDao;
+import org.gnori.booksmarket.storage.entity.AuthorEntity;
 import org.gnori.booksmarket.storage.entity.BookEntity;
 import org.gnori.booksmarket.storage.entity.enums.Language;
 import org.springframework.data.domain.Page;
@@ -193,11 +194,11 @@ public class BookController {
       bookEntity.setPublisher(newPublisher.get());
 
       var authors = bookEntity.getAuthors();
-      var publisherAuthor = bookEntity.getPublisher().getAuthors();
+      var publisherAuthors = bookEntity.getPublisher().getAuthors();
       authors.forEach(author -> {
-        if(!publisherAuthor.contains(author)) publisherAuthor.add(author);
+        if(!publisherAuthors.contains(author)) publisherAuthors.add(author);
       });
-      bookEntity.getPublisher().setAuthors(publisherAuthor);
+      bookEntity.getPublisher().setAuthors(publisherAuthors);
     }
 
     if (language.isPresent()) {
@@ -227,7 +228,18 @@ public class BookController {
     if (!bookDao.existsById(id)) {
       throw new NotFoundException(String.format("Book with id: %d not founded", id));
     }
+    var bookEntity = bookDao.findById(id).get();
+    var authorIds = bookEntity.getAuthors().stream().map(AuthorEntity::getId);
+    var publisher = bookEntity.getPublisher();
 
     bookDao.deleteById(id);
+
+    authorIds.forEach(authorId -> {
+      if (!bookDao.existsByPublisherIdAndAuthorId(publisher.getId(), authorId)) {
+        publisher.getAuthors()
+            .removeIf(authorEntity -> authorId.equals(authorEntity.getId()));
+      }
+    });
+    publisherDao.saveAndFlush(publisher);
   }
 }
