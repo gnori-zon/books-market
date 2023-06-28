@@ -17,3 +17,10 @@ spring:
 #jwt
 jwt:
   secret:
+#    15 days
+  expirationTimeHours: 360
+#logging
+#logging:
+#  level:
+#    web: debug
+#    root: debug
