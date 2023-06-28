@@ -15,16 +15,18 @@ services:
       - SPRING_DATASOURCE_USERNAME=user01
       - SPRING_DATASOURCE_PASSWORD=password01
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET=5367566B59703273357638792F423F4528482B4D6251655468576D5A71347436
+      - JWT_EXPIRATIONTIMEHOURS=360
 
   db:
     image: 'postgres:14.5-alpine'
     container_name: db
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - book-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=books-market-db
       - POSTGRES_USER=user01
       - POSTGRES_PASSWORD=password01
 volumes:
-  db-data:
+  book-db-data:
     external: true
