@@ -155,10 +155,11 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 ```
-- specify the secret key with which the jwt will be created jwt
+- specify the secret key with which the jwt will be created jwt and expiration time in hours
 ```yaml
   jwt:
-    secret: 
+    secret:
+    expirationTimeHours:
 ```
 
 ## Endpoints
