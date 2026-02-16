@@ -21,12 +21,14 @@ services:
   db:
     image: 'postgres:14.5-alpine'
     container_name: db
+    ports:
+      - "5433:5432"
     volumes:
       - book-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=books-market-db
-      - POSTGRES_USER=user01
-      - POSTGRES_PASSWORD=password01
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
 volumes:
   book-db-data:
     external: true

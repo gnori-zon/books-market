@@ -1,26 +1,24 @@
 server:
   port: 8080
-#  DB
+
 spring:
   datasource:
-    url:
-    username:
-    password:
-  jpa:
-    generate-ddl: true
-    show-sql: true
-    hibernate.ddl-auto: create-drop
+    url: jdbc:postgresql://localhost:5433/books-market-db
+    username: user
+    password: password
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-#jwt
+
 jwt:
-  secret:
-#    15 days
-  expirationTimeHours: 360
-#logging
-#logging:
-#  level:
-#    web: debug
-#    root: debug
+  secret: 5367566B59703273357638792F423F4528482B4D6251655468576D5A71347436
+  expirationTimeHours: 360 # 15 days
+
+logging:
+  level:
+    root: info
+    web: info
+
+#      web: debug
+#      root: debug
