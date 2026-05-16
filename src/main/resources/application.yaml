@@ -1,5 +1,8 @@
 server:
   port: 8080
+  error:
+    whitelabel:
+      enabled: false 
 
 spring:
   datasource:
@@ -10,15 +13,22 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
-jwt:
-  secret: 5367566B59703273357638792F423F4528482B4D6251655468576D5A71347436
-  expirationTimeHours: 360 # 15 days
+attachments:
+  connection:
+    url: http://localhost:9000
+    access-key: user 
+    secret-key: password
+    type: minio
+  temporary-bucket: tmp
+  permanent-bucket: perm
 
 logging:
   level:
     root: info
     web: info
-
-#      web: debug
-#      root: debug
